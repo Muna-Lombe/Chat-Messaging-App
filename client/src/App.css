@@ -740,7 +740,17 @@
   
     margin: 0px 20px;
   }
-  
+  .user-item__invite-container {
+    height: 28px;
+    display:flex;
+    justify-content: space-between;
+    width:80px;
+    background: #f7f6f8;
+    border: 1px solid #dedddf;
+    border-radius: 14px;
+    box-sizing: border-box;
+    margin-left: 2px;
+  }
   .user-item__invite-empty {
     height: 28px;
     width: 28px;

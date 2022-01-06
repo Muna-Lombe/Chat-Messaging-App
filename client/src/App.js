@@ -21,15 +21,7 @@ const authToken = cookies.get("token");
 // stream chat instance
 const client = StreamChat.getInstance(apiKey);
 
-//checking channels
-const getChans = async()=>{
-    const channels = await client.queryChannels({
-        members: {$in: ["fb88f59f56e36afd41a755b2e1e7ced4"]}
-    });
-    console.log(channels)
-};
 
-getChans();
 //create user instance
 if(authToken){
     client.connectUser({
@@ -43,10 +35,20 @@ if(authToken){
 }
 
 const App = () => {
-        const [createType, setCreateType] = useState('');
-        const [isCreating, setIsCreating] = useState(false);
-        const [isEditing, setIsEditing] = useState(false);
+    const [createType, setCreateType] = useState('');
+    const [isCreating, setIsCreating] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    
 
+    //fetch list of channels
+    const getChans = async()=>{
+        const fetchedChannels = await client.queryChannels({
+            members: {$in: [client.userID]}
+        });
+        console.log(fetchedChannels)
+    };
+
+	getChans();
     if (!authToken) return <Auth/>
     return (
         <div className='app__wrapper'>
