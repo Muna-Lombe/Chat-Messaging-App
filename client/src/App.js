@@ -18,6 +18,7 @@ const apiKey = '8tpzrxya45e2'; //dev server
 const authToken = cookies.get("token");
 
 
+
 // stream chat instance
 const client = StreamChat.getInstance(apiKey);
 
@@ -38,6 +39,8 @@ const App = () => {
     const [createType, setCreateType] = useState('');
     const [isCreating, setIsCreating] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
+
     
 
     //fetch list of channels
@@ -58,12 +61,15 @@ const App = () => {
                     setIsCreating={setIsCreating}
                     setCreateType={setCreateType}
                     setIsEditing={setIsEditing}
+                    setShowInfo={setShowInfo}
                 />
                 <ChannelContainer
                     isCreating={isCreating}
                     setIsCreating={setIsCreating}
                     isEditing={isEditing}
                     setIsEditing={setIsEditing}
+                    showInfo={showInfo}
+                    setShowInfo={setShowInfo}
                     createType = {createType}
                 />
 

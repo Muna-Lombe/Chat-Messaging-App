@@ -35,6 +35,7 @@ const CreateChannel = ({createType, setIsCreating}) => {
 
     //send CreateChannel request
     const createChannel = async(event) => {
+        console.log(selectedUsers)
         event.preventDefault();
         try {
             const newChannel = client.channel(
@@ -63,7 +64,7 @@ const CreateChannel = ({createType, setIsCreating}) => {
                 <CloseCreateChannel setIsCreating={setIsCreating}/>
             </div>
             {createType === 'team' && <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />}
-            <UserList setSelectedUsers={setSelectedUsers}/>
+            <UserList setSelectedUsers={setSelectedUsers} />
             <div className="create-channel__button-wrapper">
                 <p onClick={createChannel}>{createType==='team' ? 'Create Channel' : 'Create Message Group' } </p>
             </div>

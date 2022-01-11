@@ -2,28 +2,36 @@ import React from 'react'
 import { Avatar, useChatContext } from 'stream-chat-react'
 
 
-const TeamChannelPreview = ({channel, type}) => {
+const TeamChannelPreview = ({setActiveChannel, setIsCreating, setIsEditing, setToggleContainer, channel, type}) => {
     const {channel: activeChannel, client} = useChatContext();
 
-    const ChannelPreview = () => (
-        <p className="channel-preview__item">
-            # {channel?.data?.name || channel?.data?.id}
-        </p>
-    );
+    const ChannelPreview = () =>{
+        return(
+            <p className="channel-preview__item">
+                # {channel?.data?.name || channel?.data?.id}
+            </p>
+        )
+    } ;
     //(channel.state.members) returns an object with objects
     //like this -> {12:{}, 23: {}, 45:{}}
     //we can not iterate over it like with an array
     //so we pick the values using js built-in fn Object.values
     const DirectPreview = ()=>{
+
         const members = Object.values(channel.state.members).filter(({ user }) => user.id !== client.userID )
+        
+        // console.log(members);
+        
         return(
             <div className="channel-preview__item single">
                 <Avatar
+                    // className = {type === "messaging" ? 'channel-empty__avatars' : ''}
                     image={members[0]?.user?.image}
-                    name={members[0]?.user?.fullname}
+                    name={members[0]?.user?.fullName}
                     size={24}
                 />
-                <p>{members[0]?.user?.fullname}</p>
+                <p>{members[0]?.user?.fullName || members[0].user?.id}</p>
+
             </div>
         )
 
@@ -38,12 +46,18 @@ const TeamChannelPreview = ({channel, type}) => {
                     : 'channel-preview__wrapper'
             }
             onClick={() =>{
-                console.log(channel)
+                setActiveChannel(channel)
+                setIsCreating(false);
+                setIsEditing(false);
+                
+                if(setToggleContainer){
+                    setToggleContainer((prevToggleContainer) => !prevToggleContainer)
+                }
             }}
 
 
         >
-            {type === 'team' ? "<ChannelPreview/>" : "<DirectPreview/>"}
+            {type === 'team' ? <ChannelPreview/> : <DirectPreview/>}
 
         </div>
     )

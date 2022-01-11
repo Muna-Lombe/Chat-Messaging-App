@@ -5,7 +5,8 @@ import { ChannelInfo } from '../assets';
 
 export const GiphyContext = React.createContext({});
 
-const ChannelInner = ({ setIsEditing }) => {
+
+const ChannelInner = ({ setIsEditing, setShowInfo }) => {
   const [giphyState, setGiphyState] = useState(false);
   const { sendMessage } = useChannelActionContext();
   
@@ -32,7 +33,7 @@ const ChannelInner = ({ setIsEditing }) => {
     <GiphyContext.Provider value={{ giphyState, setGiphyState }}>
       <div style={{ display: 'flex', width: '100%' }}>
         <Window>
-          <TeamChannelHeader setIsEditing={setIsEditing} />
+          <TeamChannelHeader setIsEditing={setIsEditing} setShowInfo={setShowInfo} />
           <MessageList />
           <MessageInput overrideSubmitHandler={overrideSubmitHandler} />
         </Window>
@@ -42,7 +43,7 @@ const ChannelInner = ({ setIsEditing }) => {
   );
 };
 
-const TeamChannelHeader = ({ setIsEditing }) => {
+const TeamChannelHeader = ({ setIsEditing, setShowInfo }) => {
     const { channel, watcher_count } = useChannelStateContext();
     const { client } = useChatContext();
   
@@ -68,7 +69,7 @@ const TeamChannelHeader = ({ setIsEditing }) => {
       return (
         <div className='team-channel-header__channel-wrapper'>
           <p className='team-channel-header__name'># {channel.data.name}</p>
-          <span style={{ display: 'flex' }} onClick={() => setIsEditing(true)}>
+          <span style={{ display: 'flex' }} onClick={() => setShowInfo((prevState) => !prevState)}>
             <ChannelInfo />
           </span>
         </div>

@@ -35,14 +35,20 @@ const CompanyHeader = () => (
 );
 
 const customChannelTeamFilter=(channels) => {
-    return channels.filter((channel) => channel.type === 'team')
+    const teamChannels = channels.filter((channel) => channel.type === 'team')
+    // console.log(`team channels: `,teamChannels)
+
+    return teamChannels
 }
 
 const customChannelMessagingFilter=(channels) => {
-    return channels.filter((channel) => channel.type === 'Messaging')
+    const messagingChannels = channels.filter((channel) => channel.type === 'messaging')
+    // console.log(`messagin channels: `,messagingChannels)
+
+    return messagingChannels
 }
 
-const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEditing}) => {
+const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEditing, setToggleContainer,setShowInfo}) => {
     const { client } = useChatContext();
 
     const logout = () =>{
@@ -51,13 +57,14 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
         window.location.reload();
     };
 
-    const filters ={ members: {$in: [client.userID]} }
+    const filters = { members: {$in: [client.userID]} }
     return (
         <>
             <Sidebar logout={logout} />
             <div className="channel-list__list__wrapper">
                 <CompanyHeader />
                 <ChannelSearch />
+                {/* teams channels */}
                 <ChannelList 
                     filters={filters}
                     channelRenderFilterFn={customChannelTeamFilter}
@@ -69,15 +76,22 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
                             setIsCreating={setIsCreating}
                             setCreateType={setCreateType}
                             setIsEditing={setIsEditing}
+                            setToggleContainer={setToggleContainer}
+
                         />
                     )}
-                    // Preview={(previewProps) => {
-                    //     <TeamChannelPreview
-                    //         {...previewProps}
-                    //         type="team"
-                    //     />
-                    // }}
+                    Preview={(previewProps) => (
+                        <TeamChannelPreview
+                            {...previewProps}
+                            type="team"
+                            setIsCreating={setIsCreating}
+                            setIsEditing={setIsEditing}
+                            setToggleContainer={setToggleContainer}
+
+                        />
+                    )}
                 />
+                {/* direct messaging channels */}
                 <ChannelList 
                     filters={filters}
                     channelRenderFilterFn={customChannelMessagingFilter}
@@ -89,14 +103,22 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
                             setIsCreating={setIsCreating}
                             setCreateType={setCreateType}
                             setIsEditing={setIsEditing}
+                            setToggleContainer={setToggleContainer}
+                            setShowInfo={setShowInfo}
+
                         />
                     )}
-                    // Preview={(previewProps) => {
-                    //     <TeamChannelPreview
-                    //         {...previewProps}
-                    //         type="messaging"
-                    //     />
-                    // }}
+                    Preview={(previewProps) => (
+                        <TeamChannelPreview
+                            {...previewProps}
+                            type="messaging"
+                            setIsCreating={setIsCreating}
+                            setIsEditing={setIsEditing} 
+                            setToggleContainer={setToggleContainer}
+                            setShowInfo={setShowInfo}
+                                
+                        />
+                    )}
                 />
             </div>
         </>
