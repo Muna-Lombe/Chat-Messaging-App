@@ -53,7 +53,10 @@ const login = async (req,res) =>{
     const token = serverClient.createUserToken(users[0].id);
 
     if(success){
-        res.status(200).json({token, fullName: users[0].fullName, username, userId:users[0].id});
+        const { permissions } = await client.listPermissions(); // List of Permission objects
+            const { grants } = await client.getChannelType("messaging"); 
+        //  console.log(permissions);
+        res.status(200).json({token, fullName: users[0].fullName, username: username, userId: users[0].id, permissions: permissions || "no-perms", grants: grants});
     }else{
         res.status(500).json({message: "Incorrect Username or Password"})
 

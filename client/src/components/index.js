@@ -10,3 +10,4 @@ export { default as EditChannel} from './EditChannel';
 export { default as TeamMessage} from './TeamMessage';
 export { default as UserList} from './UserList';
 export { default as ChannelInfo} from './ChannelInfo';
+export { default as UserInfo} from './UserInfo';

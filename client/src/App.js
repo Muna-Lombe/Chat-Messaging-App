@@ -51,7 +51,7 @@ const App = () => {
         console.log(fetchedChannels)
     };
 
-	getChans();
+	// getChans();
     if (!authToken) return <Auth/>
     return (
         <div className='app__wrapper'>

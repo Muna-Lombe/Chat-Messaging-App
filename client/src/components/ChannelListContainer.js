@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { ChannelList, useChatContext} from 'stream-chat-react';
 import Cookies from 'universal-cookie/es6';
 
-import { ChannelSearch, TeamChannelList, TeamChannelPreview } from './';
+import { ChannelSearch, TeamChannelList, TeamChannelPreview, UserInfo} from './';
 import HospitalIcon from '../assets/hospital.png'
 import LogoutIcon from '../assets/logout.png'
 

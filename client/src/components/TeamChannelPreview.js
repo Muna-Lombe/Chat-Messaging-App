@@ -20,8 +20,6 @@ const TeamChannelPreview = ({setActiveChannel, setIsCreating, setIsEditing, setT
 
         const members = Object.values(channel.state.members).filter(({ user }) => user.id !== client.userID )
         
-        // console.log(members);
-        
         return(
             <div className="channel-preview__item single">
                 <Avatar

@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import { useChatContext } from 'stream-chat-react'
+import Cookies from 'universal-cookie/es6'
+
 // useChatContext
 
 import { UserList } from "./"
@@ -11,12 +13,29 @@ import { BackIcon } from '../assets'
 
 
 const ChannelInfo = ({isEditing, setIsEditing, setShowInfo}) => {
-    const { channel} = useChatContext();
-
+    const { channel,client} = useChatContext();
+    
     const [ activeChannelMembers, setActiveChannelMembers] = useState(Object.values(channel.state.members).map((member) => member.user.id))
-    // const [selectedUsers, setSelectedUsers] = useState([]);
 
     console.log("isediting", isEditing)
+    console.log("channel: ", channel)
+
+    //leave channel
+    const leaveChannel = async () => {
+        console.log("leaving channel...")
+        
+       
+        try {
+             await channel.removeMembers([client.userID]);
+           
+            console.log("You successfuly left the channel!")
+            window.location.reload();
+        } catch (error) {
+ 
+            console.log(error);
+        } 
+     };
+
     return (
         <div className='channel-info__container'>
             <div className="channel-info__header">
@@ -42,6 +61,11 @@ const ChannelInfo = ({isEditing, setIsEditing, setShowInfo}) => {
                 ?  <EditChannel setIsEditing={setIsEditing} isEditing={isEditing} excludeChannelMembers={activeChannelMembers}/>
                 :  <UserList activeChannelMembers={activeChannelMembers}/>
 
+            }
+            { !isEditing 
+                &&  <div className="edit-channel__button-wrapper" onClick={leaveChannel}>
+                            <p style={{backgroundColor:'var(--alert-color)'}}>Leave</p>
+                    </div>
             }
         </div>
     )

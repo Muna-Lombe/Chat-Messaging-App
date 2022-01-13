@@ -1,7 +1,6 @@
 import React, {useState} from 'react'
 import { useChatContext } from 'stream-chat-react'
-import { errorMessage } from 'stream-chat-react/dist/components/AutoCompleteTextarea/utils';
-// useChatContext
+
 
 import { UserList } from "./"
 
@@ -23,42 +22,30 @@ const ChannelNameInput = ({channelName = '', setChannelName}) => {
 };
 
 const EditChannel = ({setIsEditing, excludeChannelMembers, isEditing}) => {
-    const { channel} = useChatContext();
+    const { channel,client} = useChatContext();
     const [channelName, setChannelName] = useState(channel?.data?.name);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [submitError, setSubmitError] = useState(false)
-    
-    
-    //save changes btn
-    const onSave = (event) => {
-        
-        event.preventDefault();
-
-        console.log("new channel name: ",channelName);
-        console.log("channel detail: ",channel);
-        console.log("member",excludeChannelMembers )
-        
-
-        
-    };
+    const [unclearError, setUnclearError] = useState(false)
 
 
     //send editChannel request
-    const editChannel = async(event) => {
+    const saveEdit = async(event) => {
         const updateMsg = `Channel Name Changed by ${channel._client?.user?.fullName || channel._client?.user?.name} !\n`;
         const addMemMsg = `${selectedUsers} has joined the channel, say hi to welcome them`;
         event.preventDefault();
         setSubmitError(false)
+        setUnclearError(false)
 
         try {
             console.log("all members: ", selectedUsers )
             
             if(selectedUsers.length > 0||channelName !== channel.data.name){
                 channelName !== channel.data.name  && await channel.update({ name: channelName}, {text: updateMsg});
-                selectedUsers.length > 0 && await channel.addMembers(selectedUsers, {text: addMemMsg})
-                console.log("success, new channel: ", channel)
-                console.log("all members: ", selectedUsers )
+                selectedUsers.length > 0 && await channel.addMembers(selectedUsers, {text: addMemMsg});
                 setIsEditing(false);
+                setSelectedUsers([client.userID ])
+
 
             }else{
                 setSubmitError((prevState) => !prevState)
@@ -95,12 +82,14 @@ const EditChannel = ({setIsEditing, excludeChannelMembers, isEditing}) => {
 
         } catch (error) {
             console.log("error", error)
+            setUnclearError((prevState) => !prevState)
         }
 
     };
 
+
     //Error handling
-    const PrintError = () => {
+    const PrintSubmitError = () => {
         var opacity = 1;  // initial opacity
         var display = "";
         var filter = "";
@@ -110,19 +99,48 @@ const EditChannel = ({setIsEditing, excludeChannelMembers, isEditing}) => {
                     clearInterval(timer);
                     setSubmitError(false)
                     display = 'none';
+                    
                 }
                 // opacity ;
                 filter = 'alpha(opacity=' + opacity * 100 + ")";
                 opacity -= opacity * 0.1;
-            }, 50)
+            }, 100)
             return (
-                        <div className="edit-channel__error-wrapper" style={{display:display, opacity:opacity, filter:filter}}>
-                            <p>Please make changes or close the page to exit</p>
-                        </div>
-                    )
+                    <div className="edit-channel__error-wrapper" style={{display:display, opacity:opacity, filter:filter}}>
+                        <p>Please make changes or close the page to exit</p>
+                    </div>
+                )
         }
         
         return (errorDiv(display,opacity,filter))
+    }
+    
+    const PrintUnclearError = () => {
+        
+        return (
+            <div className="edit-channel__header" style={{justifyContent:'space-around'}}>
+                <p>Something went wrong, please refresh the page and try again🔌 </p>
+            </div>
+        )
+        
+        
+        
+    }
+
+    const NormalDiv = () =>{
+        return(
+            <>
+                <UserList 
+                setSelectedUsers={setSelectedUsers} 
+                isEditing={isEditing} 
+                excludeChannelMembers={excludeChannelMembers} 
+                />
+                {submitError && <PrintSubmitError />}
+                <div className="edit-channel__button-wrapper" onClick={saveEdit}>
+                    <p>Save</p>
+                </div>
+            </>       
+        )
     }
 
     return (
@@ -133,11 +151,16 @@ const EditChannel = ({setIsEditing, excludeChannelMembers, isEditing}) => {
                 </p>
             </div>
             <ChannelNameInput channelName={channelName} setChannelName={setChannelName} />
-            <UserList setSelectedUsers={setSelectedUsers} isEditing={isEditing} excludeChannelMembers={excludeChannelMembers} />
-            {submitError && <PrintError />}
-            <div className="edit-channel__button-wrapper" onClick={editChannel}>
-                 <p>Save</p>
+            <UserList 
+                setSelectedUsers={setSelectedUsers} 
+                isEditing={isEditing} 
+                excludeChannelMembers={excludeChannelMembers} 
+            />
+            {submitError && <PrintSubmitError />}
+            <div className="edit-channel__button-wrapper" onClick={saveEdit}>
+                <p>Save</p>
             </div>
+            
         </div>
     )
 }

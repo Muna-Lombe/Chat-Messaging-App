@@ -10,6 +10,7 @@ const ChannelContainer = ({ isCreating, setIsCreating, createType, isEditing, se
         return(
             <div className="channel__container">
                 <CreateChannel
+                    isCreating = {isCreating}
                     createType = {createType}
                     setIsCreating = {setIsCreating}
                  />

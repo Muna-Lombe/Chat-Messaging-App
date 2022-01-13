@@ -30,14 +30,24 @@ const Auth =  () => {
         
         const URL = 'http://localhost:5000/auth';
 
-        const { data: {token, userId, hashedPassword, fullName} } = await axios.post(`${URL}/${isSignup ? 'signup' : 'login'}`, {fullName: form.fullName, username, password, phoneNumber, avatarUrl}
+        const { data: {token, userId, hashedPassword, fullName, permissions, grants} } = await axios.post(`${URL}/${isSignup ? 'signup' : 'login'}`, {fullName: form.fullName, username, password, phoneNumber, avatarUrl}
         );
+        
+
+        
 
         //COMMENT THIS SECTION OUT TO TEST LASTER//
         cookies.set('token', token);
         cookies.set('userId', userId);
         cookies.set('username', username);
         cookies.set('fullName', fullName);
+
+        ////REMOVE THIS AFTER VERIFY TEST////////
+        cookies.set('permissions', permissions);
+        cookies.set('grants', grants);
+        console.log("permissions: ", permissions)
+        console.log("grants: ",grants)
+        ////////////////////////////////////////
 
         if(isSignup){
             cookies.set('phoneNumber', phoneNumber);

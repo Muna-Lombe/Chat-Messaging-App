@@ -6,13 +6,13 @@ import {InviteIcon} from "../assets"
 
 
 // Container for List of user
-const ListContainer = ({isEditing, children}) => {
+const ListContainer = ({isCreating, isEditing, children}) => {
     return(
         <div className="user-list__container">
             <div className="user-list__header">
                 <p>User</p>
                 {/* <p>Invite</p> */}
-                {isEditing && <p>Invite</p>}
+                {(isEditing || isCreating) && <p>Invite</p>}
             </div>
             {children}
         </div>
@@ -20,7 +20,7 @@ const ListContainer = ({isEditing, children}) => {
 };
 
 //individual users
-const  UserItem = ({user, setSelectedUsers, isEditing}) => {
+const  UserItem = ({user, setSelectedUsers, isCreating, isEditing}) => {
     //toggle invited
     const [selected, setSelected] = useState(false)
 
@@ -65,13 +65,13 @@ const  UserItem = ({user, setSelectedUsers, isEditing}) => {
                 <p className="user-item__name">{user.fullName || user.id}</p>
             </div>
             
-            {isEditing  && <SetInvite /> }
+            {(isEditing || isCreating)  && <SetInvite /> }
         </div>
     )
 };
 
-const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers, isEditing}) => {
-    const {client} = useChatContext();
+const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers, isEditing, isCreating}) => {
+    const {client,channel} = useChatContext();
 
     const [users, setUsers] = useState([]);
 
@@ -79,6 +79,15 @@ const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers
 
     const [listEmpty, setListEmpty] = useState(false);
     const [error, setError] = useState(false);
+    const [moderator, setModerator] = useState(false);
+
+    
+    const isModerator=() =>{
+        console.log("moderator: ", channel.data.moderator) 
+        console.log("user: ", client.userID) 
+    }
+
+    isModerator();
 
 
     useEffect(() => {
@@ -98,20 +107,16 @@ const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers
                 //Check if we have users
                 if (response.users.length){
                     let filteredUsers = null
+                    
                     // setting channel members
                     if(activeChannelMembers){
-                        console.log("filtering active", excludeChannelMembers)
                         filteredUsers = response.users.filter((user) => (activeChannelMembers.includes(user.id)))
-                        console.log("fil users: ", filteredUsers)
                     }
                     if(isEditing){
-                        console.log("filtering exclude", excludeChannelMembers)
                         filteredUsers = response.users.filter((user) => (!excludeChannelMembers.includes(user.id)))
-                        console.log("fil users: ", filteredUsers)
                     }
 
-                    console.log("res users: ", response.users)
-                    console.log("fil users: ", filteredUsers)
+                  
                     setUsers(filteredUsers || response.users);
                  
                 }else {
@@ -121,7 +126,6 @@ const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers
                 //filter out existing channel members
                 if(activeChannelMembers){
                     console.log("active channel members: ", activeChannelMembers);
-                    console.log("users: ",users);
                 }
                 
 
@@ -159,11 +163,17 @@ const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers
     };
 
     return (
-        <ListContainer isEditing={isEditing}>
+        <ListContainer isEditing={isEditing} isCreating={isCreating}>
             {loading ? <div className="user-list__message"> loading users... </div> 
             : (
                 users?.map((user, i) => (
-                    <UserItem index={i} isEditing={isEditing} key={user.id} user={user}setSelectedUsers={ setSelectedUsers } />
+                    <UserItem 
+                        index={i} 
+                        isCreating={isCreating}
+                        isEditing={isEditing} 
+                        key={user.id} 
+                        user={user}
+                        setSelectedUsers={ setSelectedUsers } />
                 ))
             )}
         </ListContainer>
