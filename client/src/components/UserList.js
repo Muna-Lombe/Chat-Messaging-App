@@ -83,11 +83,11 @@ const UserList = ({setSelectedUsers, activeChannelMembers, excludeChannelMembers
 
     
     const isModerator=() =>{
-        console.log("moderator: ", channel.data.moderator) 
-        console.log("user: ", client.userID) 
+        console.log("moderator: ", channel?.data?.moderator) 
+        console.log("user: ", client?.userID) 
     }
 
-    isModerator();
+    // isModerator();
 
 
     useEffect(() => {

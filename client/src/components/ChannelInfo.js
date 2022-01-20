@@ -48,13 +48,17 @@ const ChannelInfo = ({isEditing, setIsEditing, setShowInfo}) => {
                 <p>
                     Channel info
                 </p>
-                {
-                    !isEditing
-                    ? <span style={{ display: 'flex' }} onClick={() => setIsEditing((prevState) => !prevState)}>
-                        <EditIcon />
-                       </span> //
-                    : <CloseCreateChannel setIsEditing={setIsEditing} />
-                }
+
+                <p>
+                    {
+                        !isEditing
+                        ? <span style={{ display: 'flex' }} onClick={() => setIsEditing((prevState) => !prevState)}>
+                            <EditIcon />
+                        </span> //
+                        : <CloseCreateChannel setIsEditing={setIsEditing} />
+                    }
+                </p>
+                
             </div>
             {
                 isEditing

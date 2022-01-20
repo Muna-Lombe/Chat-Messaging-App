@@ -6,3 +6,4 @@ export { LightningBolt } from './LightningBolt';
 export { SearchIcon } from './SearchIcon';
 export { EditIcon } from './EditIcon';
 export { BackIcon } from './BackIcon';
+export { OnlineStatusIcon } from './OnlineStatusIcon';

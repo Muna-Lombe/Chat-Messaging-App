@@ -11,3 +11,5 @@ export { default as TeamMessage} from './TeamMessage';
 export { default as UserList} from './UserList';
 export { default as ChannelInfo} from './ChannelInfo';
 export { default as UserInfo} from './UserInfo';
+export { default as ResultsDropDown} from './ResultsDropDown';
+export { default as ChannelInvite} from './ChannelInvite';

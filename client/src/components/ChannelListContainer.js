@@ -62,64 +62,68 @@ const ChannelListContent = ({ isCreating, setIsCreating, setCreateType, setIsEdi
         <>
             <Sidebar logout={logout} />
             <div className="channel-list__list__wrapper">
-                <CompanyHeader />
-                <ChannelSearch />
-                {/* teams channels */}
-                <ChannelList 
-                    filters={filters}
-                    channelRenderFilterFn={customChannelTeamFilter}
-                    List={(listProps)=>(
-                        <TeamChannelList
-                            {...listProps}
-                            type="team"
-                            isCreating={isCreating}
-                            setIsCreating={setIsCreating}
-                            setCreateType={setCreateType}
-                            setIsEditing={setIsEditing}
-                            setToggleContainer={setToggleContainer}
+                <div style={{width:'100%'}}>
+                    <CompanyHeader />
+                    <ChannelSearch setToggleContainer={setToggleContainer} />
+                    {/* teams channels */}
+                    <ChannelList 
+                        filters={filters}
+                        channelRenderFilterFn={customChannelTeamFilter}
+                        List={(listProps)=>(
+                            <TeamChannelList
+                                {...listProps}
+                                type="team"
+                                isCreating={isCreating}
+                                setIsCreating={setIsCreating}
+                                setCreateType={setCreateType}
+                                setIsEditing={setIsEditing}
+                                setToggleContainer={setToggleContainer}
 
-                        />
-                    )}
-                    Preview={(previewProps) => (
-                        <TeamChannelPreview
-                            {...previewProps}
-                            type="team"
-                            setIsCreating={setIsCreating}
-                            setIsEditing={setIsEditing}
-                            setToggleContainer={setToggleContainer}
+                            />
+                        )}
+                        Preview={(previewProps) => (
+                            <TeamChannelPreview
+                                {...previewProps}
+                                type="team"
+                                setIsCreating={setIsCreating}
+                                setIsEditing={setIsEditing}
+                                setToggleContainer={setToggleContainer}
 
-                        />
-                    )}
-                />
-                {/* direct messaging channels */}
-                <ChannelList 
-                    filters={filters}
-                    channelRenderFilterFn={customChannelMessagingFilter}
-                    List={(listProps)=>(
-                        <TeamChannelList
-                            {...listProps}
-                            type="messaging"
-                            isCreating={isCreating}
-                            setIsCreating={setIsCreating}
-                            setCreateType={setCreateType}
-                            setIsEditing={setIsEditing}
-                            setToggleContainer={setToggleContainer}
-                            setShowInfo={setShowInfo}
+                            />
+                        )}
+                    />
+                    {/* direct messaging channels */}
+                    <ChannelList 
+                        filters={filters}
+                        channelRenderFilterFn={customChannelMessagingFilter}
+                        List={(listProps)=>(
+                            <TeamChannelList
+                                {...listProps}
+                                type="messaging"
+                                isCreating={isCreating}
+                                setIsCreating={setIsCreating}
+                                setCreateType={setCreateType}
+                                setIsEditing={setIsEditing}
+                                setToggleContainer={setToggleContainer}
+                                setShowInfo={setShowInfo}
 
-                        />
-                    )}
-                    Preview={(previewProps) => (
-                        <TeamChannelPreview
-                            {...previewProps}
-                            type="messaging"
-                            setIsCreating={setIsCreating}
-                            setIsEditing={setIsEditing} 
-                            setToggleContainer={setToggleContainer}
-                            setShowInfo={setShowInfo}
-                                
-                        />
-                    )}
-                />
+                            />
+                        )}
+                        Preview={(previewProps) => (
+                            <TeamChannelPreview
+                                {...previewProps}
+                                type="messaging"
+                                setIsCreating={setIsCreating}
+                                setIsEditing={setIsEditing} 
+                                setToggleContainer={setToggleContainer}
+                                setShowInfo={setShowInfo}
+                                    
+                            />
+                        )}
+                    />
+                </div>
+                
+                <UserInfo setPartialState={true} user={client.user} />
             </div>
         </>
     );

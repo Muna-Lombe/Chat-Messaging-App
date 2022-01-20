@@ -1,8 +1,9 @@
+import axios from 'axios';
 import React, {useState} from 'react'
 import { useChatContext } from 'stream-chat-react'
 
 
-import { UserList } from "./"
+import { UserList, ChannelInvite } from "./"
 
 const ChannelNameInput = ({channelName = '', setChannelName}) => {
     
@@ -25,8 +26,12 @@ const EditChannel = ({setIsEditing, excludeChannelMembers, isEditing}) => {
     const { channel,client} = useChatContext();
     const [channelName, setChannelName] = useState(channel?.data?.name);
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [userChannels, setUserChannels] = useState([])
     const [submitError, setSubmitError] = useState(false)
     const [unclearError, setUnclearError] = useState(false)
+    
+    // console.log('curr-user',client)
+    
 
 
     //send editChannel request
@@ -36,26 +41,64 @@ const EditChannel = ({setIsEditing, excludeChannelMembers, isEditing}) => {
         event.preventDefault();
         setSubmitError(false)
         setUnclearError(false)
-
+    
         try {
-            console.log("all members: ", selectedUsers )
+            // console.log("all members: ", selectedUsers )
+            // console.log('curr-user',client.getChannelByMembers('messaging', {members:['63e9f556b3609c8e5524295114ce14f4']} )  )
             
             if(selectedUsers.length > 0||channelName !== channel.data.name){
-                channelName !== channel.data.name  && await channel.update({ name: channelName}, {text: updateMsg});
-                selectedUsers.length > 0 && await channel.addMembers(selectedUsers, {text: addMemMsg});
-                setIsEditing(false);
-                setSelectedUsers([client.userID ])
+                // channelName !== channel.data.name  && await channel.update({ name: channelName}, {text: updateMsg});
+                // selectedUsers.length > 0 && await channel.addMembers(selectedUsers, {text: addMemMsg});
+                const options = {invite:'pending'};
+
+
+                // fetch or set channel to send invite to
+                const userChan = async (userId) => {
+                    let chan = client.getChannelByMembers('messaging', {members:[userId]})
+                    chan = chan.id ? chan : await client.channel('messaging', {invites:[client.userID,userId], options})
+                    chan.create();
+                    chan.sendMessage({ 
+                        text: `You were invited to a channel`
+                    })
+                    console.log('id: ',chan?.id)
+
+                    setUserChannels((prevChans) => [...prevChans, chan])
+                };
+
+                //loop through user id and set channels
+                selectedUsers.forEach((user)=> userChan(user))
+                console.log('user-channels', userChannels)
+
+                // setIsEditing(false);
+                setChannelName('');
+                setSelectedUsers([]);
 
 
             }else{
                 setSubmitError((prevState) => !prevState)
             }
             
-
+            ///////////////////////////////////////////////////////////////
+            // sending invites
+            // const invite = client.channel('messaging', 'awesome-chat', { 
+            //     name: 'Founder Chat', 
+            //     members: ['thierry', 'tommaso'], 
+            //     invites: ['nick'], 
+            // }); 
             
-             
             // await invite.create();
+            ///////////////////////////////////////////////////////////////
 
+            //////////////////////////////////////////////////////////////
+            // const rejected = client.queryChannels({ 
+            //     invite: 'pending', 
+            // }); 
+             
+            // //server side (query invites for user rob) 
+            // const invites = await client.queryChannels({ 
+            //     invite: 'pending', 
+            // },{},{'user_id':'rob'});
+            /////////////////////////////////////////////////////////////
 
             // // initialize the channel 
             // const channel = client.channel('messaging', 'awesome-chat'); 

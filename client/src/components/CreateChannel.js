@@ -32,17 +32,37 @@ const CreateChannel = ({createType, isCreating, setIsCreating}) => {
     const {client, setActiveChannel} = useChatContext();
     const [selectedUsers, setSelectedUsers] = useState([client.userID || '']);
     const [channelName, setChannelName] = useState('');
+    const [userChannels, setUserChannels] = useState([])
+
+ 
 
     //send CreateChannel request
     const createChannel = async(event) => {
+
         event.preventDefault();
         try {
             const newChannel = client.channel(
                 createType, 
                 channelName, 
-                {name: channelName, members: selectedUsers}
+                {name: channelName, invites: selectedUsers, invite:'pending'}
             )
+            await newChannel.create();
+            // fetch or set channel to send invite to
+            const userChan = async (userId) => {
+                let chan = client.getChannelByMembers('messaging', {members:[userId]})
+                chan.create();
+                chan.sendMessage({ 
+                    text: 'Check this bear out https://imgur.com/r/bears/4zmGbMN'
+                })
+                console.log('id: ',chan?.id)
+
+                setUserChannels((prevChans) => [...prevChans, chan])
+            };
+            selectedUsers.forEach((user)=> userChan(user))
+            console.log('user-channels', userChannels)
+
             await newChannel.watch();
+        
 
             //reset fields
             setChannelName('');
