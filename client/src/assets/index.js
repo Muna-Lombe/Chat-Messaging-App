@@ -7,3 +7,6 @@ export { SearchIcon } from './SearchIcon';
 export { EditIcon } from './EditIcon';
 export { BackIcon } from './BackIcon';
 export { OnlineStatusIcon } from './OnlineStatusIcon';
+export { ReactIcon } from './ReactIcon';
+export { ReplyIcon } from './ReplyIcon';
+export { MoreIcon } from './MoreIcon';

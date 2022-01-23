@@ -10,7 +10,7 @@ const UserInfo = ({setPartialState, setFullState, user}) => {
     
     const [loading, setLoading] = useState(true)
     const [isOnline, setIsOnline] = useState([user.online])
-    console.log(isOnline);
+    // console.log(isOnline);
     // setIsOnline(onlineStatus);
 
     // setPartialState && setIsPartial((prevState)=> !prevState);

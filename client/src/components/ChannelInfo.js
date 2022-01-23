@@ -36,6 +36,25 @@ const ChannelInfo = ({isEditing, setIsEditing, setShowInfo}) => {
         } 
      };
 
+     /////////////////////////////////////////////////////////////
+     ///////////  WARNING! THIS METHOD IS FOR TESTING ONLY //////
+     //////////   SHOULD NOT EXIST IN PRODUCTION ///////////////
+
+     const deleteChannel = async(req,res) =>{
+         const cids = [channel.cid]
+         try {
+            await client.deleteChannels(cids,{options: {hard_delete: true}});
+            console.log('delete res: ', res)
+            setShowInfo((prevState) => !prevState)
+         } catch (error) {
+            console.log('delete eror: ', error)
+             
+         }
+         
+     }
+     ////////////////////////////////////////////////////////////
+     ////////////////////////////////////////////////////////////
+
     return (
         <div className='channel-info__container'>
             <div className="channel-info__header">
@@ -48,8 +67,14 @@ const ChannelInfo = ({isEditing, setIsEditing, setShowInfo}) => {
                 <p>
                     Channel info
                 </p>
-
                 <p>
+                    <span onClick={deleteChannel} style={{color:'red', textDecorationLine:'underline', cursor:'pointer'}}>
+                        DelChan
+                    </span>
+                </p>
+                <p>
+
+                    
                     {
                         !isEditing
                         ? <span style={{ display: 'flex' }} onClick={() => setIsEditing((prevState) => !prevState)}>

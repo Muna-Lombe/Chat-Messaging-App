@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageList, MessageInput, Thread, Window, useChannelActionContext, Avatar, useChannelStateContext, useChatContext } from 'stream-chat-react';
-import {ChannelInvite} from './'
+import { ChannelMessage} from './'
 //assets
 import { ChannelInfo } from '../assets';
 
@@ -10,6 +10,7 @@ export const GiphyContext = React.createContext({});
 const ChannelInner = ({ setIsEditing, setShowInfo }) => {
   const [giphyState, setGiphyState] = useState(false);
   const { client } = useChatContext();
+  const [channel, setChannel] = useState('');
 
   const { sendMessage } = useChannelActionContext();
   const [hasChannelInvite, setHasChannelInvite] = useState(true)
@@ -39,24 +40,19 @@ const ChannelInner = ({ setIsEditing, setShowInfo }) => {
     }
   };
 
-  const showInvite = async()=>{
-      console.log(client)
-      //check for pending invites
-    
-      let invitations = await client.queryChannels({
-           invites: 'pending'
-       },{},{})
-       console.log("pending invites:", invitations)
   
-  }
+
+  
 
   return (
     <GiphyContext.Provider value={{ giphyState, setGiphyState }}>
       <div style={{ display: 'flex', width: '100%' }}>
         <Window>
           <TeamChannelHeader setIsEditing={setIsEditing} setShowInfo={setShowInfo} />
-          <MessageList />
-          {hasChannelInvite && <ChannelInvite  setAccept={setAccept} setReject={setReject} showInvite={showInvite}/>}
+          <MessageList Message={ (messageProps,i) => <ChannelMessage key={i} {...messageProps}  /> } />
+          {/* Message={ (messageProps,i) => <ChannelMessage key={i} {...messageProps} /> }  */}
+          
+          {/* {hasChannelInvite && <ChannelInvite setChannel={setChannel} setAccept={setAccept} setReject={setReject} setInvite={setInvite}/>} */}
           <MessageInput overrideSubmitHandler={overrideSubmitHandler} />
         </Window>
         <Thread />

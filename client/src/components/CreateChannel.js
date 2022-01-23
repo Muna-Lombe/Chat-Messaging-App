@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
-import { useChatContext } from 'stream-chat-react'
+import React, { useState } from 'react';
+import { useChatContext, useMessageContext } from 'stream-chat-react';
+
+
+
+
 
 //components
-import { UserList } from './'
+import { UserList, ChannelInvite } from './'
 
 //assest
 import { CloseCreateChannel } from '../assets'
+
+
 
 
 const ChannelNameInput = ({channelName = '', setChannelName}) => {
@@ -38,37 +44,59 @@ const CreateChannel = ({createType, isCreating, setIsCreating}) => {
 
     //send CreateChannel request
     const createChannel = async(event) => {
-
+        
         event.preventDefault();
         try {
             const newChannel = client.channel(
                 createType, 
                 channelName, 
-                {name: channelName, invites: selectedUsers, invite:'pending'}
+
+                {name: channelName, members:[client.userID], invite:true}
             )
+            
             await newChannel.create();
-            // fetch or set channel to send invite to
-            const userChan = async (userId) => {
-                let chan = client.getChannelByMembers('messaging', {members:[userId]})
-                chan.create();
-                chan.sendMessage({ 
-                    text: 'Check this bear out https://imgur.com/r/bears/4zmGbMN'
-                })
-                console.log('id: ',chan?.id)
 
-                setUserChannels((prevChans) => [...prevChans, chan])
-            };
-            selectedUsers.forEach((user)=> userChan(user))
-            console.log('user-channels', userChannels)
+            console.log('newChannel : ', newChannel)
+            
 
-            await newChannel.watch();
-        
+            // only find target contact if new channel created successfuly
+            if(newChannel?.id){
+                const userChan = async (userId) => {
+                    let chan = client.getChannelByMembers('messaging', {members:[client.userID,userId]});
+                    await chan.create();
+
+                    console.log('id: ',chan.id)
+                    console.log('chanid: ',newChannel?.id)
+
+                    // only send message if channel found or created successfuly
+                    if(chan?.id){
+
+                        chan.sendMessage({ 
+                            text: `You were invited to a channel`,
+                            isInvite:true,
+                            channel_id: {type: newChannel?.type, id: newChannel?.id}
+                        })
+                        
+                        setUserChannels((prevChans) => [...prevChans, chan])
+                    }else{
+                        console.log('chan missing, trying again')
+                      
+                        
+                    }
+                };
+
+                //loop through user id and set channels
+                selectedUsers.forEach((userId)=> userId !== client.userID && userChan(userId))
+                console.log('user-channels', userChannels)
+                await newChannel.watchers();
+            }
 
             //reset fields
             setChannelName('');
             setIsCreating(false);
-            setSelectedUsers([client.userID ])
-            setActiveChannel(newChannel)
+            setSelectedUsers([client.userID ]);
+            setActiveChannel(newChannel);
+            
 
         } catch (error) {
             console.log(error)

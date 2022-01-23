@@ -13,3 +13,4 @@ export { default as ChannelInfo} from './ChannelInfo';
 export { default as UserInfo} from './UserInfo';
 export { default as ResultsDropDown} from './ResultsDropDown';
 export { default as ChannelInvite} from './ChannelInvite';
+export { default as ChannelMessage} from './ChannelMessage';
