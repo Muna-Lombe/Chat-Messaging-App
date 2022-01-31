@@ -1,37 +1,7 @@
 import React from 'react'
 
 
-const ChannelInvite = ({channel,  user}) => {
- 
-    const acceptInvite = async () => {
-        try {
-
-            // // accept the invite 
-            await channel.acceptInvite({ 
-                message: { text: `${user?.name || user?.id} has joined this channel!` }, 
-            }); 
-            console.log(channel)
-            
-        } catch (error) {
-            console.log(error)
-            
-        }
-        
-
-    }
-
-    const rejectInvite = async() => {
-        try{
-            
-        // //rejecting invites
-            await channel.rejectInvite();
-            console.log(channel)
-        } catch (error) {
-            console.log(error)
-            
-        }
-        
-    }
+const ChannelInvite = ({channel,  user_id, sender_id, onAccept, onReject, rejected}) => {
 
 
     return (
@@ -46,20 +16,24 @@ const ChannelInvite = ({channel,  user}) => {
             <div className="str-chat__invite-card__body">
                 <p> Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis voluptate ratione id harum corrupti illo fugit!</p>
             </div>
-            <div className="str-chat__invite-card__actions">
-                <div className="str-chat__invite-card__actions_filler">
-                    <div 
-                        className="str-chat__invite-card__actions-reject"
-                        onClick={()=>(rejectInvite)}
-                    > Reject </div>
-                    <div  
-                        className="str-chat__invite-card__actions-accept"
-                        onClick={()=>(acceptInvite)}
-                    > Accept</div>
-                </div>
-                
+            {
+                sender_id !== user_id || rejected?
+                <div className="str-chat__invite-card__actions">
+                    <div className="str-chat__invite-card__actions_filler">
+                        <div 
+                            className="str-chat__invite-card__actions-reject"
+                            onClick={()=>(onReject())}
+                        > Reject </div>
+                        <div  
+                            className="str-chat__invite-card__actions-accept"
+                            onClick={()=>(onAccept())}
+                        > Accept</div>
+                    </div>
 
-            </div>
+                </div>
+                : <></>
+            }
+            
             
             
         </div>

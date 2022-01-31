@@ -12,6 +12,9 @@ import {
   SimpleReactionsList,
   useChatContext,
   useMessageContext,
+
+//
+
   
 } from 'stream-chat-react';
 
@@ -22,49 +25,91 @@ import { ChannelInvite } from './';
 const ChannelMessage =  () => {
   const {
     isReactionEnabled,
+    threadList,
     message,
+    // handleDelete,
     reactionSelectorRef,
     showDetailedReactions,
+    
   } = useMessageContext();
   const { client } = useChatContext();
   const [reactionEnabled, setReactionEnabled] = useState(!isReactionEnabled);
-  const [detailedReactions, setDetailedReactions] = useState(showDetailedReactions);
+  const [threadOpen, setThreadOpen] = useState(threadList)
+  const [rejected, setRejected] = useState()
+
+
   const [channel, setChannel] = useState({id:1, name:'Apache'});
   const [inviteSet, setInviteSet] = useState(false);
+  const [channelsFetched, setChannelsFetched] = useState(message.unread);
   
-
+    
     /// checking for and setting the channel
     const checkChannels = async() =>{
         const filters = {id: message.channel_id?.id, type: message.channel_id?.type};
-        console.log('shit set')
+        // console.log('shit set')
+        // const getChan = await client.queryChannels(filters)
         const getChan = await client.queryChannels(filters)
-        setChannel(getChan)
-            
+    
+        setChannel(getChan) 
+    }
+
+    // message.unread && setChannelsFetched(false)
+    if(!channelsFetched && message.isInvite === true && inviteSet === false) {
+        channel.name !== 'apache' && checkChannels()
         
 
-    }
-    if(message.isInvite === true && inviteSet === false) {
-        checkChannels()
         setInviteSet(true)
-        console.log(channel)
-        console.log(message)
+        // console.log(channel)
+        // console.log(message)
 
     };
 
 
-//   console.log('isrec:', isReactionEnabled)
-//   console.log('show:', showDetailedReactions)
-//   console.log('actions ico:', ActionsIcon)
-//   console.log('message context:', useMessageContext)
-//   console.log('message invite:', message)
+    const acceptInvite = async () => {
+        try {
+            console.log(channel)
+            
+    
+            // accept the invite 
+            await channel[0].acceptInvite({ acceptInvite:true,
+                message: { text: `${client.user?.name || client.user?.id} has joined this channel!` }, 
+            }); 
+            
+            console.log(channel)
+            
+            
+        } catch (error) {
+            console.log(error)
+            
+        }
+        
 
+    }
 
+    const rejectInvite = async() => {
+        try{
+            
+        // //rejecting invites
+            // await channel[0].removeMembers([client.userID])
+            console.log(message)
+            await client.deleteMessage({messageID: message.id})
+            setRejected(true)
+            console.log(channel)
+        } catch (error) {
+            console.log(error)
+            
+        }
+        
+    }
 
+    
+    const RIcon = () => (<ReactIcon setReactionEnabled={setReactionEnabled}/>)
+    const AIcon = () => (<MoreIcon />)
+    const ThIcon = () => (<ReplyIcon setThreadOpen={setThreadOpen} />)
+    const messageWrapperRef = useRef(null);
+    
 
-  const messageWrapperRef = useRef(null);
-
-
-  const hasReactions = messageHasReactions(message);
+    const hasReactions = messageHasReactions(message);
 
   const RegularMessage = () => {
     return(
@@ -95,24 +140,22 @@ const ChannelMessage =  () => {
             <div className='str-chat__message-team-author'>
                 {message.user?.name}
             </div>
-
+            
             <div className='str-chat__message-team-actions'>
-                <ReactIcon setReactionEnabled={setReactionEnabled}  />
-
-                <ReplyIcon />
-
-                <MoreIcon setDetailedReactions={setDetailedReactions} />
-
                 
                 <MessageOptions 
-                    displayLeft={true} 
+                    displayLeft={false} 
                     messageWrapperRef={messageWrapperRef} 
-                    // ActionsIcon
-                    // ReactionIcon
-                    // ThreadIcon
+                    displayReplies={true}
+                    // theme='dark'
+                    
+                    ReactionIcon = {RIcon}
+                    ActionsIcon = {AIcon}
+                    ThreadIcon = {ThIcon}
+
                 />
-                {/* showDetailedReactions &&  */}
-                { reactionEnabled && (
+                
+                { showDetailedReactions && reactionEnabled && (
                     <div className='message-team-reaction-icon'>
                         <ReactionSelector ref={reactionSelectorRef} />
                     </div>
@@ -121,45 +164,17 @@ const ChannelMessage =  () => {
             </div>
             
             <div className='str-chat__message-team-content str-chat__message-team-content--top str-chat__message-team-content--text'>
-                {message.isInvite ? <ChannelInvite channel={channel} user={message.user}/> : <RegularMessage/> }   
+                {message.isInvite ? <ChannelInvite channel={channel} onAccept={acceptInvite} onReject={rejectInvite} sender_id={message.user.id} user_id={client.user.id} rejected={rejected}/> : <RegularMessage/> }   
             </div>
 
             <div className='str-chat__message-team--received'>
                 <MessageStatus />
-            </div>
-            
-            
-
-            {/* <div className='str-chat__message-team-actions'>
-                <MessageOptions displayLeft={false} messageWrapperRef={messageWrapperRef} />
-            </div> */}
-            
-            
-            
+            </div>            
             
         </div>
-
-
-        
+ 
     </div>
   );
 };
 export default ChannelMessage;
 
-// list class
-            // str-chat__li str-chat__li--top
-        // message container class
-            // str-chat__message-team str-chat__message-team--top str-chat__message-team--regular  str-chat__message-team--received 
-        // avatar class
-            // str-chat__message-team-meta
-        // message body class
-            // str-chat__message-team-group
-        // author class
-            // str-chat__message-team-author
-        // message text class
-            // str-chat__message-team-content str-chat__message-team-content--top str-chat__message-team-content--text
-            
-        // actions class
-            // str-chat__message-team-actions
-        // reactions class
-            // message-team-reaction-icon

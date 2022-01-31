@@ -1,10 +1,10 @@
 
 import React from 'react';
 
-export const MoreIcon = ({setDetailedReactions}) => (
+export const MoreIcon = ({setHandleActions}) => (
   <p style={{ display:'flex', justifyContent: 'center', alignItems: 'center' }}>
     <svg 
-        id ='more-actions' 
+        id ='more-actions-icon' 
         width="16" 
         height="16" 
         viewBox="0 0 16 16" 
@@ -13,7 +13,7 @@ export const MoreIcon = ({setDetailedReactions}) => (
         onClick={() => 
           {  
             
-            setDetailedReactions((prevState) => !prevState)
+            setHandleActions((prevState) => !prevState)
   
             console.log('more click')
           }}

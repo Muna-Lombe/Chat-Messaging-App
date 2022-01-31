@@ -5,7 +5,7 @@ export const ReactIcon = ({setReactionEnabled}) => (
   
   <p style={{  display:'flex', justifyContent: 'center', alignItems: 'center' }}>
     <svg 
-      id='react' 
+      id='react-icon' 
       width="17" 
       height="16" 
       viewBox="0 0 17 16" 

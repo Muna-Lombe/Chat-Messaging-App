@@ -39,6 +39,7 @@ const CreateChannel = ({createType, isCreating, setIsCreating}) => {
     const [selectedUsers, setSelectedUsers] = useState([client.userID || '']);
     const [channelName, setChannelName] = useState('');
     const [userChannels, setUserChannels] = useState([])
+    const [acceptedInvite, setAcceptedInvite] = useState(false)
 
  
 
@@ -46,31 +47,38 @@ const CreateChannel = ({createType, isCreating, setIsCreating}) => {
     const createChannel = async(event) => {
         
         event.preventDefault();
+        console.log('handshake: ', client.activeChannels);
+
         try {
             const newChannel = client.channel(
                 createType, 
                 channelName, 
-
                 {name: channelName, members:[client.userID], invite:true}
             )
-            
             await newChannel.create();
 
             console.log('newChannel : ', newChannel)
+            // update "channel_member" role grants in "messaging" scope 
+         
+
             
 
             // only find target contact if new channel created successfuly
-            if(newChannel?.id){
+            if(newChannel?.ido){
+                
                 const userChan = async (userId) => {
+                    console.log('sending invite...')
                     let chan = client.getChannelByMembers('messaging', {members:[client.userID,userId]});
-                    await chan.create();
+                    // await chan.create();
 
                     console.log('id: ',chan.id)
                     console.log('chanid: ',newChannel?.id)
 
                     // only send message if channel found or created successfuly
-                    if(chan?.id){
+                    // chan.addMembers([userId])
 
+                    if(chan?.id){
+                        
                         chan.sendMessage({ 
                             text: `You were invited to a channel`,
                             isInvite:true,
@@ -88,9 +96,20 @@ const CreateChannel = ({createType, isCreating, setIsCreating}) => {
                 //loop through user id and set channels
                 selectedUsers.forEach((userId)=> userId !== client.userID && userChan(userId))
                 console.log('user-channels', userChannels)
-                await newChannel.watchers();
             }
-
+            
+            const inviteMembers = selectedUsers.filter((id) => id !== client.userID )
+            const msg = "Hi, join our channel and connect"
+            const opts = {
+                hide_history: true
+            }
+            console.log('ivs: ', inviteMembers)
+            newChannel.inviteMembers(inviteMembers, {message:msg}, {options:opts})
+            
+            
+            
+            await newChannel.watch();
+            
             //reset fields
             setChannelName('');
             setIsCreating(false);
