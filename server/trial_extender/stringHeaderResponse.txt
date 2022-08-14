@@ -3,7 +3,7 @@ Headers {
     'content-type': [ 'application/json' ],
     'transfer-encoding': [ 'chunked' ],
     connection: [ 'close' ],
-    date: [ 'Sun, 14 Aug 2022 09:24:49 GMT' ],
+    date: [ 'Sun, 14 Aug 2022 10:25:38 GMT' ],
     server: [ 'nginx' ],
     allow: [ 'POST, OPTIONS' ],
     'x-frame-options': [ 'DENY' ],
@@ -11,8 +11,8 @@ Headers {
     'x-content-type-options': [ 'nosniff, nosniff' ],
     'referrer-policy': [ 'same-origin' ],
     'set-cookie': [
-      'csrftoken=n9cDBoLgfyxBmyHFP7h037xaEumYiPZtu9AXaX2SiPw0QHR3JcAgN2uZAhtZ7yjT; Domain=getstream.io; expires=Sun, 13 Aug 2023 09:24:49 GMT; Max-Age=31449600; Path=/; Secure',
-      'sessionid=1whzjm75aw9iu5xj0m0pqq2mca8h64qv; expires=Sun, 28 Aug 2022 09:24:49 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax; Secure'
+      'csrftoken=7DeqP1UZSDCPUoSP9zfnxAVevNI28hS212BaBv0yR7Af7zs6PQiyfb9VUzw09RZY; Domain=getstream.io; expires=Sun, 13 Aug 2023 10:25:38 GMT; Max-Age=31449600; Path=/; Secure',
+      'sessionid=e89pxpqqgvtk2hhe085rqcshlh58kp9l; expires=Sun, 28 Aug 2022 10:25:38 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax; Secure'
     ],
     'strict-transport-security': [ 'max-age=31536000;' ],
     'x-xss-protection': [ '1; mode=block' ],
@@ -22,6 +22,6 @@ Headers {
       '1.1 d975c23165964b20999503339a61d1ae.cloudfront.net (CloudFront)'
     ],
     'x-amz-cf-pop': [ 'ARN1-C1' ],
-    'x-amz-cf-id': [ 'eBsE4IIXXM1Dzi1pupiIezzNFEWe-mb-_djQEchIhFpT-v1m4TvbMA==' ]
+    'x-amz-cf-id': [ 'Chh5vEH9e7h5H7GL852We7Cka99i4Mdcl6eIKLx2SPxz6NR9w-bZgw==' ]
   }
 }

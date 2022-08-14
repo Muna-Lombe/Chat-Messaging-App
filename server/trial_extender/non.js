@@ -124,10 +124,17 @@ async function login(counter = 0) {
   }
 
   function setCookies(header){
-    let replaceSymbol = /((?!\{)(\[*[a-zA-Z0-9]*\(*[a-zA-Z0-9]*\s*[a-zA-Z0-9]*\)\]:\s*[a-zA-Z0-9]*\(*[a-zA-Z0-9]*\s*[a-zA-Z0-9]*\)))/;
+    
+    let replaceSymbol = /((?!\{)(\[*[a-zA-Z0-9]*\(*[a-zA-Z0-9]*\s*[a-zA-Z0-9]*\)\]\:*\s*[a-zA-Z0-9]*\(*[a-zA-Z0-9]*\s*[a-zA-Z0-9]*\)))/;
     let replaceHeader = /((([a-zA-Z0-9]*\s)(?=(\{))))/;
     let replaceLastSymbol = /(\[Symbol\(headers map sorted\)\]: null)/;
+    
     let newHeader = header.replace(replaceHeader,'').replace(replaceSymbol,`${JSON.stringify(header[0])}:`).replaceAll('\'','\"').replaceAll('=>','\:').replace(replaceLastSymbol,'\"s\"\: {}');
+    // let slicedHeader = header.slice(header.indexOf("set-cookie")-1, header.length)
+    // let newHeader = slicedHeader.slice(0,slicedHeader.indexOf("]")+1)
+    // console.log("nh", newHeader.toString().slice(0,newHeader.toString().indexOf(':')))
+    // console.log('nh',{[newHeader.slice(0,newHeader.indexOf(':'))]: newHeader.slice(newHeader.indexOf(':')+1,newHeader.length)})
+    // return -1;
     let objectFromHeaderArr = Object.entries(JSON.parse(newHeader))[0][1];
     let sortCookies = objectFromHeaderArr['set-cookie'].split(';')
     
@@ -172,9 +179,9 @@ async function login(counter = 0) {
   if(lr.resp.status === '400'){signup() ;login(++counter)};
   let res = await lr.res;
 
-  headerCapture.log(lr.resp.headers)//new Document())//lr.resp.headers['set-cookie']);
+  headerCapture.log(lr.resp.headers)//lr.resp.headers['set-cookie']);
   let cookie =  JSON.parse(JSON.stringify((fs.readFileSync("stringHeaderResponse.txt").toString())));
-
+  // console.log("cookie", cookie)
   setCookies(cookie);
   return 1;
 }
