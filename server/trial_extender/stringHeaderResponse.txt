@@ -1,0 +1,27 @@
+Headers {
+  [Symbol(map)]: [Object: null prototype] {
+    'content-type': [ 'application/json' ],
+    'transfer-encoding': [ 'chunked' ],
+    connection: [ 'close' ],
+    date: [ 'Sun, 14 Aug 2022 09:24:49 GMT' ],
+    server: [ 'nginx' ],
+    allow: [ 'POST, OPTIONS' ],
+    'x-frame-options': [ 'DENY' ],
+    vary: [ 'Origin, Cookie' ],
+    'x-content-type-options': [ 'nosniff, nosniff' ],
+    'referrer-policy': [ 'same-origin' ],
+    'set-cookie': [
+      'csrftoken=n9cDBoLgfyxBmyHFP7h037xaEumYiPZtu9AXaX2SiPw0QHR3JcAgN2uZAhtZ7yjT; Domain=getstream.io; expires=Sun, 13 Aug 2023 09:24:49 GMT; Max-Age=31449600; Path=/; Secure',
+      'sessionid=1whzjm75aw9iu5xj0m0pqq2mca8h64qv; expires=Sun, 28 Aug 2022 09:24:49 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax; Secure'
+    ],
+    'strict-transport-security': [ 'max-age=31536000;' ],
+    'x-xss-protection': [ '1; mode=block' ],
+    'content-encoding': [ 'gzip' ],
+    'x-cache': [ 'Miss from cloudfront' ],
+    via: [
+      '1.1 d975c23165964b20999503339a61d1ae.cloudfront.net (CloudFront)'
+    ],
+    'x-amz-cf-pop': [ 'ARN1-C1' ],
+    'x-amz-cf-id': [ 'eBsE4IIXXM1Dzi1pupiIezzNFEWe-mb-_djQEchIhFpT-v1m4TvbMA==' ]
+  }
+}
