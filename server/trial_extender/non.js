@@ -828,5 +828,6 @@ async function genApp(mode="default state",command="continue"){
 
 var args = process.argv.slice(2).length > 0 ? process.argv.slice(2)[0] : null
 
-genApp(args);
+// genApp(args);
+cleanSlate()
 
