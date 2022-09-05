@@ -4,17 +4,19 @@ import { Chat } from 'stream-chat-react';
 import Cookies from 'universal-cookie/es6';
 import {ChannelContainer, ChannelListContainer, Auth} from './components';
 
+// import {api} from "../../trial_extender/streamData.json";
 //CSS imports
 import 'stream-chat-react/dist/css/index.css'
 import './App.css';
+import { dc, FA } from './components/Auth';
 
 //get cookies
 const cookies = new Cookies();
 
 // local stream apikey//
 
-// const apiKey= 'cqgny3xq54uh';// prod server
-const apiKey = '8tpzrxya45e2'; //dev server
+// const apiKey= '8tpzrxya45e2';// prod server
+const apiKey = cookies.get("atlas") ? dc(cookies.get("atlas")) :  FA().then(r=>r); //dev server
 const authToken = cookies.get("token");
 
 

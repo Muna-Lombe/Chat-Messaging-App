@@ -7,7 +7,8 @@ import signinImage from '../assets/signup.jpg'
 
 
 const cookies = new Cookies();
-
+        
+const s = sessionStorage.setItem.bind(sessionStorage)
 const initialState = {
     fullName:"",
     username:"",
@@ -23,6 +24,7 @@ const Auth =  () => {
     const handleChange = (event) =>{
         setForm({...form, [event.target.name]: event.target.value});
     };
+    
     const handleSubmit = async (event) =>{
         event.preventDefault();
         
@@ -68,7 +70,10 @@ const Auth =  () => {
         <div className='auth__form-container'>
             <div className="auth__form-container_fields">
                 <div className="auth__form-container_fields-content">
-                    <p>{isSignup ? "Sign up" : "Sign In"}</p>
+                    <div style={{"display":"flex", "flexDirection":"row","justifyContent":"space-between" }}>
+                        <p>{isSignup ? "Sign up" : "Sign In"}</p>
+                    </div>
+                        
                     <form onSubmit={()=>{}}>
                         
                         {isSignup && (
@@ -170,5 +175,18 @@ const Auth =  () => {
         </div>
     )
 }
-
+export const dc = (en)=>{
+            const n = en.hash.toString().slice(en.hash.length-4, en.hash.length).split("#")
+            const ex = en.hash.slice(Number.parseInt(n[0]), (Number.parseInt(n[0])+Number.parseInt(n[1])))
+            // console.log("dehashed:",ex)
+            return ex;
+        }
+export const FA =async () => {
+        const URL = 'http://localhost:5000/auth';
+        const { data: res } = await axios.get(`${URL}/fetchauthor`)
+        cookies.set('atlas', res);
+        s('atlas', res)
+        
+        return dc(res)
+}
 export default Auth

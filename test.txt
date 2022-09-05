@@ -1,0 +1,6 @@
+apps:
+- name: dev
+  access-key: a473f9se75cz
+  access-secret-key: jm9zssw8bquy5mnaxk9jzne63zwjxbvhjjt6ykqpznpaspg32f3bqc8rb3byn2cc
+  chat-url: https://chat.stream-io-api.com
+default: dev
