@@ -1,35 +1,58 @@
-const express = require('express');
-const cors =  require('cors');
-const res = require('express/lib/response');
 
-//Requiring routes
-const authRoutes = require('./routes/auth.js')
-const inviteRoutes = require('./routes/invite.js')
+const { fork, exec, execFile, spawn } = require("child_process");
 
-const app = express();
-const PORT = process.env.PORT || 5000;
 
-require('dotenv').config();
 
-// TO MAKE CROSS-ORIGIN REQUESTS
-app.use(cors());
-// TO PASS JSON DATA
-app.use(express.json());
-// TO ENCODE THE URL
-app.use(express.urlencoded());
 
-// Creating routes://
+// SET UP TWO SERVERS, ONE INITIAL AND ANOTHER RESTARTED
+// START THE SERVER AS A CHILD PROCESS AND LISTEN FOR ERRORS
 
-//GET route
-app.get('/',(req, res) =>{
-    res.send('Hello, world!');
-});
+function restart_server(process){
+  const initArgs = process.spawnargs[1]
+  return fork(initArgs)
+}
 
-//POST route
-app.use('/auth', authRoutes);
-app.use('/invite', inviteRoutes)
-//checking routes
-// console.log('app routes:',app._router)
+function log_process(process){
+  console.log("args",process.spawnargs)
+  process.stdio=[0,'pipe','pipe']
+  process.on('message', (message) => {
+    console.log('message', message)
+    if(message === "ExpiredStreamClientError"){
+      console.log("error:", message, ", disconnecting to reset...")
+      process.send('STOP')
+    }
+    if(message === "SERVER STOPPED"){
+      console.log("message:", message, ", restarting...")
+      // process.send('START')
+      // process.kill(process.pid)
+    }
+  })
 
-// Server status
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+  process.send('START');
+  process.on('disconnect', (err)=>{
+    console.log('updating cred with procfile...')
+    const secondary = fork(__dirname+"/run_procfile")
+    secondary.stdio=[0,'pipe','pipe']
+    secondary.on('message', (message)=>{
+      if(message === "ERROR"){
+        console.log("error, what should I do now?")
+        secondary.send("STOP")
+      }
+      if(message === "COMPLETE"){
+        console.log("completed update, can now restart process")
+        secondary.send("STOP")
+      }
+    }).on('disconnect', (msg)=>{
+      console.log('update complete, restarting server', msg)
+      // process = 
+      log_process(restart_server(process))
+    })
+    secondary.send('START')
+  })
+}
+let process = fork(__dirname+"/start_server")
+
+log_process(process)
+
+
